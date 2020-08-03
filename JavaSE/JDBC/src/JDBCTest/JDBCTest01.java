@@ -1,0 +1,79 @@
+package JDBCTest;
+
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.Statement;
+
+public class JDBCTest01 {
+
+	public static void main(String[] args){
+		// TODO Auto-generated method stub          
+		Statement stmt = null;
+		Connection conn = null;
+
+		//1、注册驱动
+		try {
+			DriverManager.registerDriver(new org.mariadb.jdbc.Driver());
+	    //2、获取连接
+			/**
+			 *   例如：https://www.baidu.com 就是url
+			 * url 统一资源定位符（网络中某个资源的绝对路径）
+			 * url包括：协议  、ip、port、资源名 
+			 * https://182.61.200.7:80/index.html
+			 * https://通信协议
+			 * 182.61.200.7  服务器ip地址
+			 * 80 端口
+			 * index.html 服务器上某个资源名
+			 * 
+			 * jdbc:mysql://localhost:3306/bjpowernode
+			 * jdbc:mysql://协议
+			 * localhost 本地ip地址
+			 * 3306 port端口
+			 * bjpowernode 具体的数据库实例名
+			 * 说明：localhost和127.0.0.1都是本机ip地址。
+			 * 
+			 */
+			String url = "jdbc:mysql://localhost:3306/bjpowernode";
+			String user = "alex01";
+			String password ="666";
+			conn = DriverManager.getConnection(url, user, password);
+			System.out.println("数据库连接对象="+conn);
+			//数据库连接对象org.mariadb.jdbc.MariaDbConnection@443b7951
+			//3、获取数据库操作对象(statement专门执行sql语句)
+			stmt = conn.createStatement();
+			//4、执行sql
+			String sql = "insert into DEPT(DEPTNO,DNAME,LOC) values(50,'人事部','北京')";
+			int count = stmt.executeUpdate(sql);//专门执行DML语句：insert update delete
+			//返回值是影响数据库中的记录条数
+			System.out.println(count == 1 ?"保存成功" : "保存失败");
+			//5、处理查询结果集
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			//6、释放资源
+			//为了保证资源一定释放，在finally语句块中关闭资源
+			//并且要遵循从小到大依次关闭
+			//分别对其try&catch
+			if(stmt != null){
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if(conn != null){
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
+
+}

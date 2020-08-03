@@ -1,0 +1,146 @@
+经典习题：
+1、找出每个部门平均的薪水等级（要求有部门编号、部门名称、平均的薪水等级）
+ SELECT E.DEPTNO,D.DNAME,AVG(S.GRADE) FROM EMP E JOIN DEPT D ON E.DEPTNO = D.DEPTNO JOIN SALGRADE S ON E.SAL BETWEEN LOSAL AND HISAL GROUP BY DEPTNO;
++--------+------------+--------------+
+| DEPTNO | DNAME      | AVG(S.GRADE) |
++--------+------------+--------------+
+|     10 | ACCOUNTING |       3.6667 |
+|     20 | RESEARCH   |       2.8000 |
+|     30 | SALES      |       2.5000 |
++--------+------------+--------------+
+
+重要知识点：
+
+*语法格式：
+插入数据/增加数据
+insert into 表名(字段名1,字段名2,字段名3,....) values(值1,值2,值3,....)
+		要求：字段的数量和值的数量相同，并且数据类型要对应相同。
+修改：
+update 表名 set 字段名1=值1,字段名2=值2... where 条件;
+删除：
+delete from 表名 where 条件;（没有条件约束则全部删除）
+表的复制：
+create table 表名 as select语句;
+		将查询结果当做表创建出来。
+索引：
+    创建索引对象：
+			create index 索引名称 on 表名(字段名);
+		删除索引对象：
+			drop index 索引名称 on 表名;
+	索引底层采用的数据结构是：B + Tree
+
+
+*数据查询语言(DQL-Data Query Language)  
+代表关键字:select 
+数据操纵语言(DML-Data Manipulation Language)
+代表关键字:insert,delete,update 
+数据定义语言(DDL-Data Definition Language)
+代表关键字:create ,drop,alter,
+事务控制语言(TCL-Transactional Control Language)
+代表关键字:commit ,rollback;
+数据控制语言(DCL-Data Control Language)
+代表关键字:grant,revoke.
+
+创建视图和删除视图
+create view myview as select empno,ename from emp;
+		drop view myview;
+
+*truncate table 表名; // 表被截断，不可回滚。永久丢失。
+
+*常见的约束：
+非空约束(not null)：约束的字段不能为NULL
+唯一约束(unique)：约束的字段不能重复
+主键约束(primary key)：约束的字段既不能为NULL，也不能重复（简称PK）
+外键约束(foreign key)：...（简称FK）
+检查约束(check)：注意Oracle数据库有check约束，但是mysql没有，目前mysql不支持该约束。
+
+*表的设计三范式
+第一范式（1NF）无重复的列
+第二范式（2NF）属性完全依赖于主键
+第三范式（3NF）属性不依赖于其它非主属性
+
+*主键自增
+mysql提供主键值自增：（非常重要。）
+drop table if exists t_user;
+create table t_user(
+   id int primary key auto_increment, // id字段自动维护一个自增的数字，从1开始，以1递增。
+   username varchar(255)
+);
+提示:Oracle当中也提供了一个自增机制，叫做：序列（sequence）对象。
+
+*外键约束：
+顺序要求：
+		删除数据的时候，先删除子表，再删除父表。
+		添加数据的时候，先添加父表，在添加子表。
+		创建表的时候，先创建父表，再创建子表。
+		删除表的时候，先删除子表，在删除父表。
+例：
+                                create table t_class(
+			cno int,
+			cname varchar(255),
+			primary key(cno)
+		);
+
+		create table t_student(
+			sno int,
+			sname varchar(255),
+			classno int,
+			primary key(sno),
+			foreign key(classno) references t_class(cno)
+		);
+  其中：t_student中的classno字段引用t_class表中的cno字段，此时t_student表叫做子表。t_class表叫做父表。
+
+*事务的定义：
+一个事务是一个完整的业务逻辑单元，不可再分。
+事务包括四大特性：ACID
+	A: 原子性：事务是最小的工作单元，不可再分。
+	C: 一致性：事务必须保证多条DML语句同时成功或者同时失败。
+	I：隔离性：事务A与事务B之间具有隔离。
+	D：持久性：持久性说的是最终数据必须持久化到硬盘文件中，事务才算成功的结束。
+
+*关于事务之间的隔离性
+事务隔离性存在隔离级别，理论上隔离级别包括4个：
+			第一级别：读未提交（read uncommitted）
+				对方事务还没有提交，我们当前事务可以读取到对方未提交的数据。
+				读未提交存在脏读（Dirty Read）现象：表示读到了脏的数据。
+			第二级别：读已提交（read committed）
+				对方事务提交之后的数据我方可以读取到。
+				这种隔离级别解决了: 脏读现象没有了。
+				读已提交存在的问题是：不可重复读。
+			第三级别：可重复读（repeatable read）
+				这种隔离级别解决了：不可重复读问题。
+				这种隔离级别存在的问题是：读取到的数据是幻象。
+			第四级别：序列化读/串行化读（serializable） 
+				解决了所有问题。
+				效率低。需要事务排队。
+			
+			oracle数据库默认的隔离级别是：读已提交。
+			mysql数据库默认的隔离级别是：可重复读。
+			
+*关于事务的自动提交
+mysql事务默认情况下是自动提交的。
+			（什么是自动提交？只要执行任意一条DML语句则提交一次。）
+			 怎么关闭自动提交？start transaction;
+
+*数据库设计三范式
+第一范式：任何一张表都应该有主键，并且每一个字段原子性不可再分。
+第二范式：建立在第一范式的基础之上，所有非主键字段完全依赖主键，不能产生部分依赖。
+         多对多？三张表，关系表两个外键。
+第三范式：建立在第二范式的基础之上，所有非主键字段直接依赖主键，不能产生传递依赖。
+        一对多？两张表，多的表加外键。
+
+        一对一：主键共享、外键唯一
+提醒：在实际的开发中，以满足客户的需求为主，有的时候会拿冗余换执行速度。
+
+*设置隔离级别
+演示第1级别：读未提交
+				set global transaction isolation level read uncommitted;
+			演示第2级别：读已提交
+				set global transaction isolation level read committed;
+			演示第3级别：可重复读
+				set global transaction isolation level repeatable read;
+			演示第4级别：序列化读/串行化读（serializable）
+			    set global transaction isolation level serializable;
+				
+*查看隔离级别：
+select @@global_tx isolation;
