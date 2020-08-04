@@ -95,3 +95,40 @@ select e.ename,e.sal from emp e join (select deptno,avg(sal) avgsal from emp gro
 +--------+-------------+
 |     10 | 2916.666667 |
 +--------+-------------+
+
+6、取得平均薪水最高的部门的部门名称
+  第一步：select deptno,avg(sal) from emp group by deptno;
++--------+-------------+
+| deptno | avg(sal)    |
++--------+-------------+
+|     10 | 2916.666667 |
+|     20 | 2175.000000 |
+|     30 | 1566.666667 |
++--------+-------------+
+  第二步：select d.dname from dept d join (select deptno,avg(sal) avgsal from emp group by deptno) t on d.deptno = t.deptno order by t.avgsal desc limit 0,1;
++------------+
+| dname      |
++------------+
+| ACCOUNTING |
++------------+
+
+7、求平均薪水的等级最低的部门的部门名称
+  第一步：select deptno,avg(sal) from emp group by deptno;
++--------+-------------+
+| deptno | avg(sal)    |
++--------+-------------+
+|     10 | 2916.666667 |
+|     20 | 2175.000000 |
+|     30 | 1566.666667 |
++--------+-------------+
+  第二步：select d.dname from dept d join (select deptno,avg(sal) avgsal from emp group by deptno) t on d.deptno = t.deptno order by t.avgsal asc limit 0,1;
++-------+
+| dname |
++-------+
+| SALES |
++-------+
+
+8、取得比普通员工(员工代码没有在 mgr 字段上出现的)的最高薪水还要高的领导人姓名
+  第一步：
+
+  第二步：
