@@ -11,13 +11,14 @@ public class OperatorTest01 {
 		System.out.println(a/b);
 		System.out.println(a%b);
 		
+		System.out.println("====================");
 		int i = 10;
 		i++;
-		System.out.println(i);
+		System.out.println(i);//11
 		
 		int k = 10;
 		++k;
-		System.out.println(k);
+		System.out.println(k);//11
 		
 		int m = 20;
 		int n = m++;
@@ -28,8 +29,8 @@ public class OperatorTest01 {
 		
 		int x = 100;
 		int y = ++x;
-		System.out.println(y);
-		System.out.println(x);
+		System.out.println(y);//101
+		System.out.println(x);//101
 		
 		int c = 90;
 		//c++;
