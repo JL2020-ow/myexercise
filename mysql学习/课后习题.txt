@@ -197,8 +197,49 @@ select e.ename,e.sal,e.deptno from emp e join ( select distinct mgr from emp whe
 +--------+---------+
 
 11、取得最后入职的5名员工
+第一步：select ename,hiredate from emp order by hiredate desc limit 0,5;
++--------+------------+
+| ename  | hiredate   |
++--------+------------+
+| ADAMS  | 1987-05-23 |
+| SCOTT  | 1987-04-19 |
+| MILLER | 1982-01-23 |
+| JAMES  | 1981-12-03 |
+| FORD   | 1981-12-03 |
++--------+------------+
 
 12、取得每个薪水等级有多少员工
+第一步：select e.ename,e.sal,s.grade from emp e join salgrade s on e.sal between s.losal and s.hisal;
++--------+---------+-------+
+| ename  | sal     | grade |
++--------+---------+-------+
+| SMITH  |  800.00 |     1 |
+| ALLEN  | 1600.00 |     3 |
+| WARD   | 1250.00 |     2 |
+| JONES  | 2975.00 |     4 |
+| MARTIN | 1250.00 |     2 |
+| BLAKE  | 2850.00 |     4 |
+| CLARK  | 2450.00 |     4 |
+| SCOTT  | 3000.00 |     4 |
+| KING   | 5000.00 |     5 |
+| TURNER | 1500.00 |     3 |
+| ADAMS  | 1100.00 |     1 |
+| JAMES  |  950.00 |     1 |
+| FORD   | 3000.00 |     4 |
+| MILLER | 1300.00 |     2 |
++--------+---------+-------+
+第二步：
+按照s.grade分组
+select s.grade,count(*) from emp e join salgrade s on e.sal between s.losal and s.hisal group by s.grade;
++-------+----------+
+| grade | count(*) |
++-------+----------+
+|     1 |        3 |
+|     2 |        3 |
+|     3 |        2 |
+|     4 |        5 |
+|     5 |        1 |
++-------+----------+
 
 13、面试题
 
