@@ -243,6 +243,11 @@ select s.grade,count(*) from emp e join salgrade s on e.sal between s.losal and 
 +-------+----------+
 
 13、面试题
+（1）找出没选过“黎明”老师的所有学生姓名。
+
+（2）列出2门以上（含2门）不及格学生姓名及平均成绩。
+
+（3）即学过1号课程又学过2号课所有学生的姓名。
 
 14、列出所有员工及领导的姓名
 考察知识点：ifnull函数用法、外连接
@@ -314,3 +319,13 @@ select s.grade,count(*) from emp e join salgrade s on e.sal between s.losal and 
 |  7698 | BLAKE   | SALES      |
 |  7782 | CLARK   | ACCOUNTING |
 +-------+---------+------------+
+
+16、
+
+17、
+
+18、
+
+19、
+
+20、
