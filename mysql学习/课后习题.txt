@@ -209,6 +209,7 @@ select e.ename,e.sal,e.deptno from emp e join ( select distinct mgr from emp whe
 +--------+------------+
 
 12、取得每个薪水等级有多少员工
+考察知识点：count分组函数的用法
 第一步：select e.ename,e.sal,s.grade from emp e join salgrade s on e.sal between s.losal and s.hisal;
 +--------+---------+-------+
 | ename  | sal     | grade |
@@ -244,5 +245,72 @@ select s.grade,count(*) from emp e join salgrade s on e.sal between s.losal and 
 13、面试题
 
 14、列出所有员工及领导的姓名
+考察知识点：ifnull函数用法、外连接
+第一步：select a.ename,ifnull(b.ename,'没有上级') from emp a left join emp b on a.mgr = b.empno;
++--------+----------------------------+
+| ename  | ifnull(b.ename,'没有上级') |
++--------+----------------------------+
+| SMITH  | FORD                       |
+| ALLEN  | BLAKE                      |
+| WARD   | BLAKE                      |
+| JONES  | KING                       |
+| MARTIN | BLAKE                      |
+| BLAKE  | KING                       |
+| CLARK  | KING                       |
+| SCOTT  | JONES                      |
+| KING   | 没有上级                   |
+| TURNER | BLAKE                      |
+| ADAMS  | SCOTT                      |
+| JAMES  | BLAKE                      |
+| FORD   | JONES                      |
+| MILLER | CLARK                      |
++--------+----------------------------+
 
 15、列出受雇日期早于其直接上级的所有员工的编号,姓名,部门名称
+第一步：select a.ename '员工',b.ename '领导' from emp a join emp b on a.mgr = b.empno;
++--------+-------+
+| 员工   | 领导  |
++--------+-------+
+| SMITH  | FORD  |
+| ALLEN  | BLAKE |
+| WARD   | BLAKE |
+| JONES  | KING  |
+| MARTIN | BLAKE |
+| BLAKE  | KING  |
+| CLARK  | KING  |
+| SCOTT  | JONES |
+| TURNER | BLAKE |
+| ADAMS  | SCOTT |
+| JAMES  | BLAKE |
+| FORD   | JONES |
+| MILLER | CLARK |
++--------+-------+
+第二步：select a.ename '员工',a.hiredate,b.ename '领导',b.hiredate,d.dname from emp a join emp b on a.mgr = b.empno join dept d on a.deptno = d.deptno;
++--------+------------+-------+------------+------------+
+| 员工   | hiredate   | 领导  | hiredate   | dname      |
++--------+------------+-------+------------+------------+
+| CLARK  | 1981-06-09 | KING  | 1981-11-17 | ACCOUNTING |
+| MILLER | 1982-01-23 | CLARK | 1981-06-09 | ACCOUNTING |
+| SMITH  | 1980-12-17 | FORD  | 1981-12-03 | RESEARCH   |
+| JONES  | 1981-04-02 | KING  | 1981-11-17 | RESEARCH   |
+| SCOTT  | 1987-04-19 | JONES | 1981-04-02 | RESEARCH   |
+| ADAMS  | 1987-05-23 | SCOTT | 1987-04-19 | RESEARCH   |
+| FORD   | 1981-12-03 | JONES | 1981-04-02 | RESEARCH   |
+| ALLEN  | 1981-02-20 | BLAKE | 1981-05-01 | SALES      |
+| WARD   | 1981-02-22 | BLAKE | 1981-05-01 | SALES      |
+| MARTIN | 1981-09-28 | BLAKE | 1981-05-01 | SALES      |
+| BLAKE  | 1981-05-01 | KING  | 1981-11-17 | SALES      |
+| TURNER | 1981-09-08 | BLAKE | 1981-05-01 | SALES      |
+| JAMES  | 1981-12-03 | BLAKE | 1981-05-01 | SALES      |
++--------+------------+-------+------------+------------+
+第三步：select a.empno,a.ename ename_e,d.dname from emp a join emp b on a.mgr = b.empno and a.hiredate < b.hiredate join dept d on a.deptno = d.deptno order by empno;
++-------+---------+------------+
+| empno | ename_e | dname      |
++-------+---------+------------+
+|  7369 | SMITH   | RESEARCH   |
+|  7499 | ALLEN   | SALES      |
+|  7521 | WARD    | SALES      |
+|  7566 | JONES   | RESEARCH   |
+|  7698 | BLAKE   | SALES      |
+|  7782 | CLARK   | ACCOUNTING |
++-------+---------+------------+
