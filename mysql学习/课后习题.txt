@@ -600,10 +600,61 @@ right join
 | FORD  | RESEARCH   | JONES    |        4 |
 +-------+------------+----------+----------+
 优化方法：
-
+第一步： 
+select e.ename '姓名',d.dname '部门名称',ifnull(l.ename,'无') '上级领导',s.grade '工资等级' from emp e 
+left join emp l on e.mgr = l.empno join dept d on e.deptno = d.deptno 
+join salgrade s on e.sal between s.losal and s.hisal;
++--------+------------+----------+----------+
+| 姓名   | 部门名称   | 上级领导 | 工资等级 |
++--------+------------+----------+----------+
+| SMITH  | RESEARCH   | FORD     |        1 |
+| ALLEN  | SALES      | BLAKE    |        3 |
+| WARD   | SALES      | BLAKE    |        2 |
+| JONES  | RESEARCH   | KING     |        4 |
+| MARTIN | SALES      | BLAKE    |        2 |
+| BLAKE  | SALES      | KING     |        4 |
+| CLARK  | ACCOUNTING | KING     |        4 |
+| SCOTT  | RESEARCH   | JONES    |        4 |
+| KING   | ACCOUNTING | 无       |        5 |
+| TURNER | SALES      | BLAKE    |        3 |
+| ADAMS  | RESEARCH   | SCOTT    |        1 |
+| JAMES  | SALES      | BLAKE    |        1 |
+| FORD   | RESEARCH   | JONES    |        4 |
+| MILLER | ACCOUNTING | CLARK    |        2 |
++--------+------------+----------+----------+
+第二步：
+select e.ename '姓名',d.dname '部门名称',ifnull(l.ename,'无') '上级领导',s.grade '工资等级' from emp e left 
+join emp l on e.mgr = l.empno 
+join dept d on e.deptno = d.deptno 
+join salgrade s on e.sal between s.losal and s.hisal where e.sal > (select avg(sal) from emp);
++-------+------------+----------+----------+
+| 姓名  | 部门名称   | 上级领导 | 工资等级 |
++-------+------------+----------+----------+
+| JONES | RESEARCH   | KING     |        4 |
+| BLAKE | SALES      | KING     |        4 |
+| CLARK | ACCOUNTING | KING     |        4 |
+| SCOTT | RESEARCH   | JONES    |        4 |
+| KING  | ACCOUNTING | 无       |        5 |
+| FORD  | RESEARCH   | JONES    |        4 |
++-------+------------+----------+----------+
 
 23、列出与"SCOTT"从事相同工作的所有员工及部门名称。
+第一步：select job from emp where ename = 'scott';
++---------+
+| job     |
++---------+
+| ANALYST |
++---------+
+第二步：select e.ename,d.dname from emp e join dept d on e.deptno = d.deptno where job=(select job from emp where ename = 'scott');
++-------+----------+
+| ename | dname    |
++-------+----------+
+| SCOTT | RESEARCH |
+| FORD  | RESEARCH |
++-------+----------+
+优化方法：
 
 24、列出薪金等于部门30中员工的薪金的其他员工的姓名和薪金.
+第一步：
 
 25、列出薪金高于在部门30工作的所有员工的薪金的员工姓名和薪金.部门名称.
