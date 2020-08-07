@@ -503,14 +503,106 @@ select d.dname,e.* from emp e right join dept d on e.deptno = d.deptno order by 
 20、列出最低薪金大于1500的各种工作及从事此工作的全部雇员人数。
 第一步：
 按照工作岗位分组求最小值。
+select job,min(sal) from emp group by job having min(sal) > 1500;
++-----------+----------+
+| job       | min(sal) |
++-----------+----------+
+| ANALYST   |  3000.00 |
+| MANAGER   |  2450.00 |
+| PRESIDENT |  5000.00 |
++-----------+----------+
+第二步：select e.job,count(e.empno) from emp e join (select job,min(sal) from emp group by job having min(sal) > 1500) t on e.job = t.job group by t.job;
++-----------+----------------+
+| job       | count(e.empno) |
++-----------+----------------+
+| ANALYST   |              2 |
+| MANAGER   |              3 |
+| PRESIDENT |              1 |
++-----------+----------------+
 
 
+21、列出在部门"SALES"<销售部>工作的员工的姓名,假定不知道销售部的部门编号。
+第一步：select deptno from dept where dname = 'sales';
++--------+
+| deptno |
++--------+
+|     30 |
++--------+
+第二步： select ename from emp where deptno = (select deptno from dept where dname = 'sales');
++--------+
+| ename  |
++--------+
+| ALLEN  |
+| WARD   |
+| MARTIN |
+| BLAKE  |
+| TURNER |
+| JAMES  |
++--------+
 
-21、列出在部门"SALES"<销售部>工作的员工的姓名,假定不知道销售部的部门编号.
+22、列出薪金高于公司平均薪金的所有员工,所在部门,上级领导,雇员的工资等级。
+第一步：找出员工对应的上级领导
+select a.ename '姓名',b.ename '上级领导' from emp a left join emp b on a.mgr = b.empno;
++--------+----------+
+| 姓名   | 上级领导 |
++--------+----------+
+| SMITH  | FORD     |
+| ALLEN  | BLAKE    |
+| WARD   | BLAKE    |
+| JONES  | KING     |
+| MARTIN | BLAKE    |
+| BLAKE  | KING     |
+| CLARK  | KING     |
+| SCOTT  | JONES    |
+| KING   | NULL     |
+| TURNER | BLAKE    |
+| ADAMS  | SCOTT    |
+| JAMES  | BLAKE    |
+| FORD   | JONES    |
+| MILLER | CLARK    |
++--------+----------+
+第二步：select e.ename '姓名',d.dname '部门名称',s.grade '工资等级' from emp e join dept d on e.deptno = d.deptno join salgrade s on e.sal between s.losal and s.hisal where e.sal > (select avg(sal) from emp);
++-------+------------+----------+
+| 姓名  | 部门名称   | 工资等级 |
++-------+------------+----------+
+| JONES | RESEARCH   |        4 |
+| BLAKE | SALES      |        4 |
+| CLARK | ACCOUNTING |        4 |
+| SCOTT | RESEARCH   |        4 |
+| KING  | ACCOUNTING |        5 |
+| FORD  | RESEARCH   |        4 |
++-------+------------+----------+
+第三步：select m.姓名,n.部门名称,ifnull(m.上级领导,'无') '上级领导',n.工资等级 
+from 
+(select a.ename '姓名',b.ename '上级领导' from emp a left join emp b on a.mgr = b.empno) m 
+right join 
+(select e.ename '姓名',d.dname '部门名称',s.grade '工资等级' from emp e join dept d on e.deptno = d.deptno
+ join salgrade s on e.sal between s.losal and s.hisal where e.sal > (select avg(sal) from emp)) n on n.姓名 = m.姓名;
++-------+------------+-------------------------+----------+
+| 姓名  | 部门名称   | ifnull(m.上级领导,'无') | 工资等级 |
++-------+------------+-------------------------+----------+
+| JONES | RESEARCH   | KING                    |        4 |
+| BLAKE | SALES      | KING                    |        4 |
+| CLARK | ACCOUNTING | KING                    |        4 |
+| SCOTT | RESEARCH   | JONES                   |        4 |
+| KING  | ACCOUNTING | 无                      |        5 |
+| FORD  | RESEARCH   | JONES                   |        4 |
++-------+------------+-------------------------+----------+
 
-22、列出薪金高于公司平均薪金的所有员工,所在部门,上级领导,雇员的工资等级.
++-------+------------+----------+----------+
+| 姓名  | 部门名称   | 上级领导 | 工资等级 |
++-------+------------+----------+----------+
+| JONES | RESEARCH   | KING     |        4 |
+| BLAKE | SALES      | KING     |        4 |
+| CLARK | ACCOUNTING | KING     |        4 |
+| SCOTT | RESEARCH   | JONES    |        4 |
+| KING  | ACCOUNTING | 无       |        5 |
+| FORD  | RESEARCH   | JONES    |        4 |
++-------+------------+----------+----------+
+优化方法：
 
-23、列出与"SCOTT"从事相同工作的所有员工及部门名称.
+
+23、列出与"SCOTT"从事相同工作的所有员工及部门名称。
 
 24、列出薪金等于部门30中员工的薪金的其他员工的姓名和薪金.
 
