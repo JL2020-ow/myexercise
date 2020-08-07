@@ -320,12 +320,198 @@ select s.grade,count(*) from emp e join salgrade s on e.sal between s.losal and 
 |  7782 | CLARK   | ACCOUNTING |
 +-------+---------+------------+
 
-16、
+16、列出部门名称和这些部门的员工信息,同时列出那些没有员工的部门。
+select d.dname,e.* from emp e right join dept d on e.deptno = d.deptno order by deptno;
++------------+-------+--------+-----------+------+------------+---------+---------+--------+
+| dname      | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
++------------+-------+--------+-----------+------+------------+---------+---------+--------+
+| OPERATIONS |  NULL | NULL   | NULL      | NULL | NULL       |    NULL |    NULL |   NULL |
+| ACCOUNTING |  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300.00 |    NULL |     10 |
+| ACCOUNTING |  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450.00 |    NULL |     10 |
+| ACCOUNTING |  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000.00 |    NULL |     10 |
+| RESEARCH   |  7566 | JONES  | MANAGER   | 7839 | 1981-04-02 | 2975.00 |    NULL |     20 |
+| RESEARCH   |  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000.00 |    NULL |     20 |
+| RESEARCH   |  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800.00 |    NULL |     20 |
+| RESEARCH   |  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100.00 |    NULL |     20 |
+| RESEARCH   |  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000.00 |    NULL |     20 |
+| SALES      |  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600.00 |  300.00 |     30 |
+| SALES      |  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850.00 |    NULL |     30 |
+| SALES      |  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500.00 |    0.00 |     30 |
+| SALES      |  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950.00 |    NULL |     30 |
+| SALES      |  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+| SALES      |  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
++------------+-------+--------+-----------+------+------------+---------+---------+--------+
 
-17、
+17、列出至少有5个员工的所有部门
+考察知识点：having的用法
+第一步：select d.deptno,d.dname,e.ename from emp e join dept d on e.deptno = d.deptno;
++--------+------------+--------+
+| deptno | dname      | ename  |
++--------+------------+--------+
+|     20 | RESEARCH   | SMITH  |
+|     30 | SALES      | ALLEN  |
+|     30 | SALES      | WARD   |
+|     20 | RESEARCH   | JONES  |
+|     30 | SALES      | MARTIN |
+|     30 | SALES      | BLAKE  |
+|     10 | ACCOUNTING | CLARK  |
+|     20 | RESEARCH   | SCOTT  |
+|     10 | ACCOUNTING | KING   |
+|     30 | SALES      | TURNER |
+|     20 | RESEARCH   | ADAMS  |
+|     30 | SALES      | JAMES  |
+|     20 | RESEARCH   | FORD   |
+|     10 | ACCOUNTING | MILLER |
++--------+------------+--------+
+第二步：select d.dname,count(*) from emp e join dept d on e.deptno = d.deptno group by e.deptno;
++------------+----------+
+| dname      | count(*) |
++------------+----------+
+| ACCOUNTING |        3 |
+| RESEARCH   |        5 |
+| SALES      |        6 |
++------------+----------+
+第三步：select d.dname,count(*) from emp e join dept d on e.deptno = d.deptno group by e.deptno having count(*) >= 5;
++----------+----------+
+| dname    | count(*) |
++----------+----------+
+| RESEARCH |        5 |
+| SALES    |        6 |
++----------+----------+
 
-18、
+18、列出薪金比"SMITH"多的所有员工信息。
+第一步：select sal from emp where ename = 'smith';
++--------+
+| sal    |
++--------+
+| 800.00 |
++--------+
+第二步：select * from emp where sal > (select sal from emp where ename = 'smith');
++-------+--------+-----------+------+------------+---------+---------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL     | COMM    | DEPTNO |
++-------+--------+-----------+------+------------+---------+---------+--------+
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600.00 |  300.00 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250.00 |  500.00 |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | 1981-04-02 | 2975.00 |    NULL |     20 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250.00 | 1400.00 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850.00 |    NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1981-06-09 | 2450.00 |    NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000.00 |    NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000.00 |    NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500.00 |    0.00 |     30 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100.00 |    NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | 1981-12-03 |  950.00 |    NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | 1981-12-03 | 3000.00 |    NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300.00 |    NULL |     10 |
++-------+--------+-----------+------+------------+---------+---------+--------+
 
-19、
+19、列出所有"CLERK"(办事员)的姓名及其部门名称,部门的人数。
+第一步：select e.ename,d.dname,e.job from emp e join dept d on e.deptno = d.deptno;
++--------+------------+-----------+
+| ename  | dname      | job       |
++--------+------------+-----------+
+| SMITH  | RESEARCH   | CLERK     |
+| ALLEN  | SALES      | SALESMAN  |
+| WARD   | SALES      | SALESMAN  |
+| JONES  | RESEARCH   | MANAGER   |
+| MARTIN | SALES      | SALESMAN  |
+| BLAKE  | SALES      | MANAGER   |
+| CLARK  | ACCOUNTING | MANAGER   |
+| SCOTT  | RESEARCH   | ANALYST   |
+| KING   | ACCOUNTING | PRESIDENT |
+| TURNER | SALES      | SALESMAN  |
+| ADAMS  | RESEARCH   | CLERK     |
+| JAMES  | SALES      | CLERK     |
+| FORD   | RESEARCH   | ANALYST   |
+| MILLER | ACCOUNTING | CLERK     |
++--------+------------+-----------+
+第二步：select d.deptno,d.dname,count(*) cc from emp e join dept d on e.deptno = d.deptno group by e.deptno ;
++--------+------------+----+
+| deptno | dname      | cc |
++--------+------------+----+
+|     10 | ACCOUNTING |  3 |
+|     20 | RESEARCH   |  5 |
+|     30 | SALES      |  6 |
++--------+------------+----+
+第三步：select e.ename,e.job,t.dname,t.cc from emp e join (select d.deptno,d.dname,count(*) cc from emp e join dept d on e.deptno = d.deptno group by e.deptno) t on e.deptno = t.deptno ;
++--------+-----------+------------+----+
+| ename  | job       | dname      | cc |
++--------+-----------+------------+----+
+| SMITH  | CLERK     | RESEARCH   |  5 |
+| ALLEN  | SALESMAN  | SALES      |  6 |
+| WARD   | SALESMAN  | SALES      |  6 |
+| JONES  | MANAGER   | RESEARCH   |  5 |
+| MARTIN | SALESMAN  | SALES      |  6 |
+| BLAKE  | MANAGER   | SALES      |  6 |
+| CLARK  | MANAGER   | ACCOUNTING |  3 |
+| SCOTT  | ANALYST   | RESEARCH   |  5 |
+| KING   | PRESIDENT | ACCOUNTING |  3 |
+| TURNER | SALESMAN  | SALES      |  6 |
+| ADAMS  | CLERK     | RESEARCH   |  5 |
+| JAMES  | CLERK     | SALES      |  6 |
+| FORD   | ANALYST   | RESEARCH   |  5 |
+| MILLER | CLERK     | ACCOUNTING |  3 |
++--------+-----------+------------+----+
+第四步：select e.ename,t.dname,t.cc from emp e join (select d.deptno,d.dname,count(*) cc from emp e join dept d on e.deptno = d.deptno group by e.deptno) t on e.deptno = t.deptno where e.job = 'clerk';
++--------+------------+----+
+| ename  | dname      | cc |
++--------+------------+----+
+| SMITH  | RESEARCH   |  5 |
+| ADAMS  | RESEARCH   |  5 |
+| JAMES  | SALES      |  6 |
+| MILLER | ACCOUNTING |  3 |
++--------+------------+----+
+优化方法：
+第一步：select e.ename,e.job from emp e where e.job = 'clerk';
++--------+-------+
+| ename  | job   |
++--------+-------+
+| SMITH  | CLERK |
+| ADAMS  | CLERK |
+| JAMES  | CLERK |
+| MILLER | CLERK |
++--------+-------+
+第二步：select e.ename,e.job,d.dname,d.deptno from emp e join dept d on e.deptno = d.deptno where e.job = 'clerk';
++--------+-------+------------+--------+
+| ename  | job   | dname      | deptno |
++--------+-------+------------+--------+
+| SMITH  | CLERK | RESEARCH   |     20 |
+| ADAMS  | CLERK | RESEARCH   |     20 |
+| JAMES  | CLERK | SALES      |     30 |
+| MILLER | CLERK | ACCOUNTING |     10 |
++--------+-------+------------+--------+
+第三步：
+创建临时表：select deptno,count(*) cc from emp group by deptno;
++--------+----+
+| deptno | cc |
++--------+----+
+|     10 |  3 |
+|     20 |  5 |
+|     30 |  6 |
++--------+----+
+进行表连接：select t1.ename,t1.dname,t2.cc from (select e.ename,e.job,d.dname,d.deptno from emp e join dept d on e.deptno = d.deptno where e.job = 'clerk') t1 
+            join (select deptno,count(*) cc from emp group by deptno) t2 on t1.deptno = t2.deptno;
++--------+------------+----+
+| ename  | dname      | cc |
++--------+------------+----+
+| SMITH  | RESEARCH   |  5 |
+| ADAMS  | RESEARCH   |  5 |
+| JAMES  | SALES      |  6 |
+| MILLER | ACCOUNTING |  3 |
++--------+------------+----+
 
-20、
+20、列出最低薪金大于1500的各种工作及从事此工作的全部雇员人数。
+第一步：
+按照工作岗位分组求最小值。
+
+
+
+21、列出在部门"SALES"<销售部>工作的员工的姓名,假定不知道销售部的部门编号.
+
+22、列出薪金高于公司平均薪金的所有员工,所在部门,上级领导,雇员的工资等级.
+
+23、列出与"SCOTT"从事相同工作的所有员工及部门名称.
+
+24、列出薪金等于部门30中员工的薪金的其他员工的姓名和薪金.
+
+25、列出薪金高于在部门30工作的所有员工的薪金的员工姓名和薪金.部门名称.
