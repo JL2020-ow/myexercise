@@ -993,5 +993,49 @@ select e.ename,ifnull(l.ename,'无') leader from emp e left join emp l on e.mgr=
 +-------+--------+
 
 33、求出部门名称中,带'S'字符的部门员工的工资合计、部门人数。
+第一步：
+select d.dname,sum(e.sal),count(e.ename) from emp e right join dept d on e.deptno = d.deptno group by d.deptno;
++------------+------------+----------------+
+| dname      | sum(e.sal) | count(e.ename) |
++------------+------------+----------------+
+| ACCOUNTING |    8750.00 |              3 |
+| RESEARCH   |   10875.00 |              5 |
+| SALES      |    9400.00 |              6 |
+| OPERATIONS |       NULL |              0 |
+| 人事部     |       NULL |              0 |
++------------+------------+----------------+
+第二步：
+select d.dname,sum(e.sal),count(e.ename) from emp e right join dept d on e.deptno = d.deptno where d.dname like '%s%' group by d.deptno;
++------------+------------+----------------+
+| dname      | sum(e.sal) | count(e.ename) |
++------------+------------+----------------+
+| RESEARCH   |   10875.00 |              5 |
+| SALES      |    9400.00 |              6 |
+| OPERATIONS |       NULL |              0 |
++------------+------------+----------------+
 
 34、给任职日期超过30年的员工加薪10%。
+第一步：
+查找出任职超过30年的员工 假设当前日期为2014年1月1日
+select empno,ename,timestampdiff(year,hiredate,'2014-1-1') YearOfJob from emp;
+第二步：
+select e.ename,e.sal*1.1 newsal from emp e join (select empno,ename,timestampdiff(year,hiredate,'2014-1-1') YearOfJob from emp) t 
+on e.empno = t.empno and t.YearOfJob >30;
++--------+---------+
+| ename  | newsal  |
++--------+---------+
+| SMITH  |  880.00 |
+| ALLEN  | 1760.00 |
+| WARD   | 1375.00 |
+| JONES  | 3272.50 |
+| MARTIN | 1375.00 |
+| BLAKE  | 3135.00 |
+| CLARK  | 2695.00 |
+| KING   | 5500.00 |
+| TURNER | 1650.00 |
+| JAMES  | 1045.00 |
+| FORD   | 3300.00 |
+| MILLER | 1430.00 |
++--------+---------+
+update语句:
+update emp set sal = sal * 1.1 where timestampdiff(year,hiredate,'2014-1-1') > 30;
