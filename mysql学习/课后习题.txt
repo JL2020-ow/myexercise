@@ -850,12 +850,147 @@ select d.*,ifnull(count(e.ename),0) '人数' from emp e right join dept d on e.d
 +--------+------------+----------+------+
 
 29、列出各种工作的最低工资及从事此工作的雇员姓名
+第一步：
+select min(sal),job from emp group by job;
++----------+-----------+
+| min(sal) | job       |
++----------+-----------+
+|  3000.00 | ANALYST   |
+|   800.00 | CLERK     |
+|  2450.00 | MANAGER   |
+|  5000.00 | PRESIDENT |
+|  1250.00 | SALESMAN  |
++----------+-----------+
+第二步：
+select e.ename,t.* from emp e join (select min(sal) minsal,job from emp group by job) t on e.job = t.job and e.sal = t.minsal;
++--------+---------+-----------+
+| ename  | minsal  | job       |
++--------+---------+-----------+
+| SMITH  |  800.00 | CLERK     |
+| WARD   | 1250.00 | SALESMAN  |
+| MARTIN | 1250.00 | SALESMAN  |
+| CLARK  | 2450.00 | MANAGER   |
+| SCOTT  | 3000.00 | ANALYST   |
+| KING   | 5000.00 | PRESIDENT |
+| FORD   | 3000.00 | ANALYST   |
++--------+---------+-----------+
 
 30、列出各个部门的MANAGER(领导)的最低薪金
+第一步：
+select e.ename,ifnull(l.ename,'无') leader from emp e left join emp l on e.mgr= l.empno;
++--------+--------+
+| ename  | leader |
++--------+--------+
+| SMITH  | FORD   |
+| ALLEN  | BLAKE  |
+| WARD   | BLAKE  |
+| JONES  | KING   |
+| MARTIN | BLAKE  |
+| BLAKE  | KING   |
+| CLARK  | KING   |
+| SCOTT  | JONES  |
+| KING   | 无     |
+| TURNER | BLAKE  |
+| ADAMS  | SCOTT  |
+| JAMES  | BLAKE  |
+| FORD   | JONES  |
+| MILLER | CLARK  |
++--------+--------+
+第二步：select distinct mgr from emp;
++------+
+| mgr  |
++------+
+| 7902 |
+| 7698 |
+| 7839 |
+| 7566 |
+| NULL |
+| 7788 |
+| 7782 |
++------+
+第三步：
+select d.deptno,min(sal) from emp e join dept d on e.deptno = d.deptno 
+join (select distinct mgr from emp) t on t.mgr = e.empno group by d.deptno;
++--------+----------+
+| deptno | min(sal) |
++--------+----------+
+|     10 |  2450.00 |
+|     20 |  2975.00 |
+|     30 |  2850.00 |
++--------+----------+
 
 31、列出所有员工的年工资,按年薪从低到高排序
+第一步：
+ select ename,(sal + ifnull(comm,0))*12 income from emp;
+ +--------+----------+
+| ename  | income   |
++--------+----------+
+| SMITH  |  9600.00 |
+| ALLEN  | 22800.00 |
+| WARD   | 21000.00 |
+| JONES  | 35700.00 |
+| MARTIN | 31800.00 |
+| BLAKE  | 34200.00 |
+| CLARK  | 29400.00 |
+| SCOTT  | 36000.00 |
+| KING   | 60000.00 |
+| TURNER | 18000.00 |
+| ADAMS  | 13200.00 |
+| JAMES  | 11400.00 |
+| FORD   | 36000.00 |
+| MILLER | 15600.00 |
++--------+----------+
+第二步：
+select ename,(sal + ifnull(comm,0))*12 income from emp order by sal asc;
++--------+----------+
+| ename  | income   |
++--------+----------+
+| SMITH  |  9600.00 |
+| JAMES  | 11400.00 |
+| ADAMS  | 13200.00 |
+| WARD   | 21000.00 |
+| MARTIN | 31800.00 |
+| MILLER | 15600.00 |
+| TURNER | 18000.00 |
+| ALLEN  | 22800.00 |
+| CLARK  | 29400.00 |
+| BLAKE  | 34200.00 |
+| JONES  | 35700.00 |
+| FORD   | 36000.00 |
+| SCOTT  | 36000.00 |
+| KING   | 60000.00 |
++--------+----------+
 
 32、求出员工领导的薪水超过3000的员工名称与领导名称
+第一步：
+select e.ename,ifnull(l.ename,'无') leader from emp e left join emp l on e.mgr= l.empno;
++--------+--------+
+| ename  | leader |
++--------+--------+
+| SMITH  | FORD   |
+| ALLEN  | BLAKE  |
+| WARD   | BLAKE  |
+| JONES  | KING   |
+| MARTIN | BLAKE  |
+| BLAKE  | KING   |
+| CLARK  | KING   |
+| SCOTT  | JONES  |
+| KING   | 无     |
+| TURNER | BLAKE  |
+| ADAMS  | SCOTT  |
+| JAMES  | BLAKE  |
+| FORD   | JONES  |
+| MILLER | CLARK  |
++--------+--------+
+第二步：
+select e.ename,ifnull(l.ename,'无') leader from emp e left join emp l on e.mgr= l.empno where l.sal > 3000;
++-------+--------+
+| ename | leader |
++-------+--------+
+| JONES | KING   |
+| BLAKE | KING   |
+| CLARK | KING   |
++-------+--------+
 
 33、求出部门名称中,带'S'字符的部门员工的工资合计、部门人数。
 
