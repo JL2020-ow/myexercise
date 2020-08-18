@@ -21,7 +21,7 @@ public class SwitchTest02 {
 		Scanner s = new Scanner(System.in);
 		System.out.println("请输入学生成绩");
 		double score = s.nextDouble();
-		if(score <0 || score > 100) {
+		if(score < 0 || score > 100) {
 			System.out.println("对不起，您输入的成绩不合法，请重新输入！");
 			continue;
 		}else {

@@ -53,7 +53,7 @@ public class SwitchTest01 {
 		Scanner s = new Scanner(System.in);
 		System.out.println("请输入[0,6]的整数：");
 		int num = s.nextInt();
-		if(num <0 || num >6) {
+		if(num < 0 || num > 6) {
 		   System.out.println("对不起，输入的数字不合法，请重新输入！");
 		   continue;
 		}else{
