@@ -5,7 +5,6 @@ package CourseReview.ControlStatement006;
 	6,7,8 夏季 
 	9,10,11 秋季 
 	12, 1, 2 冬季
-
 	if和switch各写一版
 */
 import java.util.Scanner;
@@ -40,3 +39,4 @@ public class HomeWork {
 		}
 	}
 }
+
