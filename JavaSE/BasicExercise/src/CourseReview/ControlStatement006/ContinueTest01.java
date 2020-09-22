@@ -29,6 +29,7 @@ continue;语句：
 				code3;
 			}
 		}
+		//理解：continue表示跳过当前循环，break表示满足条件后跳出当前循环。
 */
 public class ContinueTest01 {
 	public static void main(String[] args) {
