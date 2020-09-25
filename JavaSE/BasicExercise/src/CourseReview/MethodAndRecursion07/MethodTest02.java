@@ -1,4 +1,4 @@
-package CourseReview.MethodAndRecursion;
+package CourseReview.MethodAndRecursion07;
 
 /*
 这个程序是一个体验程序，你看不懂，你只需要去体验就行了。

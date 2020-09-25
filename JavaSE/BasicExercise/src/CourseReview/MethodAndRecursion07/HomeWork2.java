@@ -1,4 +1,4 @@
-package CourseReview.MethodAndRecursion;
+package CourseReview.MethodAndRecursion07;
 
 /*
 编写一个方法，输出大于某个正整数n的最小的质数

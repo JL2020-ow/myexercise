@@ -1,4 +1,4 @@
-package CourseReview.MethodAndRecursion;
+package CourseReview.MethodAndRecursion07;
 //目前我们正在学习的一个内容是：方法重载机制（overload）
 
 public class S{

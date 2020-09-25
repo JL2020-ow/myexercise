@@ -1,4 +1,4 @@
-package CourseReview.MethodAndRecursion;
+package CourseReview.MethodAndRecursion07;
 
 public class MethodTest09{
 	public static void main(String[] args){

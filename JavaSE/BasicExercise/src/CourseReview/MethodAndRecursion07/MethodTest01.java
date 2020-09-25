@@ -1,4 +1,4 @@
-package CourseReview.MethodAndRecursion;
+package CourseReview.MethodAndRecursion07;
 
 /*
 对于一个java程序来说，如果没有“方法”，会存在什么问题？

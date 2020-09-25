@@ -1,4 +1,4 @@
-package CourseReview.MethodAndRecursion;
+package CourseReview.MethodAndRecursion07;
 
 //大家分析以下代码，编译器会报错吗？
 public class MethodTest07{
