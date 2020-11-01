@@ -3,3 +3,7 @@
 创建外网用户：create user 'username' @ '%' identified by 'password';
 赋予权限：grant all privileges on *.* to 'username'@'%' identified by 'password';
 刷新权限：FLUSH PRIVILEGES;
+
+导入表/数据库：source  sql文件
+导出：在终端下：mysqldump 数据库名 (表名）> 导出目录 -u root -p(密码) -P（端口号）
+
