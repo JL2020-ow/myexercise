@@ -1,0 +1,38 @@
+1.   root权限登录 
+mysql -u root -p
+2.   添加用户  
+配置用户本地 IP 访问 localhost, 127.0.0.1
+create user 'username'@'localhost' identified by 'password';
+配置用户外网 IP 访问
+create user 'username'@'%' identified by 'password'; 
+刷新权限
+FLUSH PRIVILEGES;
+3.用户权限
+权限列表:
+ALTER: 修改表和索引。
+CREATE: 创建数据库和表。
+DELETE: 删除表中已有的记录。
+DROP: 抛弃(删除)数据库和表。
+INDEX: 创建或抛弃索引。
+INSERT: 向表中插入新行。
+REFERENCE: 未用。
+SELECT: 检索表中的记录。
+UPDATE: 修改现存表记录。
+FILE: 读或写服务器上的文件。
+PROCESS: 查看服务器中执行的线程信息或杀死线程。
+RELOAD: 重载授权表或清空日志、主机缓存或表缓存。
+SHUTDOWN: 关闭服务器。
+ALL: 所有权限，ALL PRIVILEGES同义词。
+USAGE: 特殊的 "无权限" 权限.
+可根据上面的权限字段 为用户分配相应的权限;
+语法:
+
+1. grant all privileges on *.* to 'username'@'%' identified by 'password';
+2. grant SELECT,DELETE,UPDATE on *.* to 'username'@'%' identified by 'password';
+刷新权限
+FLUSH PRIVILEGES;
+4.问题
+操作中发现 MySQL5.7 以后  user表中的password 已不再使用, 对应字段: authentication_string ; 
+ 
+补充 为用户创建数据库  
+create database basename DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
